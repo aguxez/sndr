@@ -44,6 +44,8 @@ library
     , persistent
     , persistent-postgresql
     , safe
+    , servant
+    , servant-errors
     , servant-server
     , text
     , transformers
@@ -70,6 +72,8 @@ executable sndr-exe
     , persistent
     , persistent-postgresql
     , safe
+    , servant
+    , servant-errors
     , servant-server
     , sndr
     , text
@@ -98,6 +102,8 @@ test-suite sndr-test
     , persistent
     , persistent-postgresql
     , safe
+    , servant
+    , servant-errors
     , servant-server
     , sndr
     , text

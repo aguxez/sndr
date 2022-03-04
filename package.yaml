@@ -36,6 +36,8 @@ dependencies:
   - wai
   - wai-extra
   - warp
+  - servant-errors
+  - servant
 
 library:
   source-dirs: src

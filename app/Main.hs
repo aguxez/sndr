@@ -1,12 +1,18 @@
+{-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications  #-}
 
 module Main where
 
-import           Config                   (Config (..), Environment (..), makePool, setLogger)
-import           Network.Wai.Handler.Warp (run)
-import           Safe                     (readMay)
-import           System.Environment       (lookupEnv)
-import           UsersRouter              (app')
+import           Config                                (Config (..),
+                                                        Environment (..),
+                                                        makePool, setLogger)
+import           Network.Wai.Handler.Warp              (run)
+import           Network.Wai.Middleware.Servant.Errors (errorMw)
+import           Safe                                  (readMay)
+import           Servant.API.ContentTypes               (JSON)
+import           System.Environment                    (lookupEnv)
+import           UsersRouter                           (app')
 
 lookupSetting :: Read a => String -> a -> IO a
 lookupSetting env def = do
@@ -34,4 +40,4 @@ main = do
   pool <- makePool env
   let config = Config { configPool = pool }
       logger = setLogger env
-  run port $ logger $ app' config
+  run port $ logger $ errorMw @JSON @'["error", "status"] $ app' config
