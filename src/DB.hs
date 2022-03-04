@@ -22,7 +22,7 @@ import           Web.PathPieces                          (PathPiece (..),
                                                           showToPathPiece)
 
 instance PersistField UUID.UUID where
-  toPersistValue u = PersistLiteral_ Escaped . BS8.pack . UUID.toString $ u
+  toPersistValue = PersistLiteral_ Escaped . BS8.pack . UUID.toString
 
   fromPersistValue (PersistLiteral_ Escaped t) =
     case UUID.fromString $ BS8.unpack t of
