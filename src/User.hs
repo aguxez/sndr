@@ -30,3 +30,5 @@ share [mkPersist (setImplicitIdDef uuidDef sqlSettings)] [persistLowerCase|
 newtype NewUserPayload = NewUserPayload { newUsername :: String } deriving (Generic)
 
 instance FromJSON NewUserPayload
+
+instance ToJSON NewUserPayload

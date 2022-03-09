@@ -17,7 +17,7 @@ license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
-    ChangeLog.md
+    CHANGELOG.md
 
 source-repository head
   type: git
@@ -27,7 +27,6 @@ library
   exposed-modules:
       Config
       DB
-      Lib
       User
       UsersRouter
   other-modules:
@@ -94,8 +93,15 @@ test-suite sndr-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
+    , aeson-lens
     , base >=4.7 && <5
+    , base-compat-batteries
     , bytestring
+    , hspec
+    , hspec-wai
+    , http-client
+    , http-types
+    , lens
     , monad-logger
     , mtl
     , path-pieces
@@ -103,11 +109,14 @@ test-suite sndr-test
     , persistent-postgresql
     , safe
     , servant
+    , servant-client
     , servant-errors
+    , servant-quickcheck
     , servant-server
     , sndr
     , text
     , transformers
+    , unordered-containers
     , uuid
     , wai
     , wai-extra

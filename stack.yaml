@@ -42,6 +42,7 @@ packages:
 #
 extra-deps:
   - postgresql-simple-migration-0.1.15.0@sha256:123d8f62b0e300aede37e2d6dacc81b9468cb68dc5c3f52fe807085992280aa8,3969
+  - servant-quickcheck-0.0.10.0@sha256:1d5849d703c2487752f8fc7391cca7c998ee24f54ca0bb72d238bf99b64ac667,3755
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

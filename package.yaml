@@ -8,7 +8,7 @@ copyright:           "2022 Author name here"
 
 extra-source-files:
 - README.md
-- ChangeLog.md
+- CHANGELOG.md
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
@@ -63,3 +63,14 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - sndr
+    - servant-client
+    - hspec
+    - lens
+    - unordered-containers
+    - hspec-wai
+    - servant-quickcheck
+    - aeson
+    - aeson-lens
+    - http-types
+    - base-compat-batteries
+    - http-client

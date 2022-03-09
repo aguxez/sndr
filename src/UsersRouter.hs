@@ -2,7 +2,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeOperators    #-}
 
-module UsersRouter (app') where
+module UsersRouter (app', userProxy, UserAPI) where
 
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import           Config                               (Config)
@@ -46,5 +46,8 @@ userServer conf = allUsers :<|> getUser :<|> createUser
     createUser :: MonadIO m => NewUserPayload -> m (Entity User)
     createUser newUser = liftIO $ runDB conf $ insertEntity (User (newUsername newUser))
 
+userProxy :: Proxy UserAPI
+userProxy = Proxy
+
 app' :: Config -> Application
-app' conf = serve (Proxy :: Proxy UserAPI) (userServer conf)
+app' conf = serve userProxy (userServer conf)
