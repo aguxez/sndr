@@ -3,7 +3,8 @@
 {-# LANGUAGE TypeFamilies      #-}
 
 import           Data.List                            (head)
-import           Database.Persist.Class.PersistEntity (Entity (..))
+import           Database.Persist.Class.PersistEntity (Entity (..), Key)
+import           Database.Persist.Class.PersistUnique (getBy)
 import           Network.HTTP.Client                  (defaultManagerSettings,
                                                        newManager)
 import qualified Network.Wai.Handler.Warp             as Warp
@@ -29,6 +30,7 @@ import           UsersRouter                          (UserAPI, app')
 
 allUsers :: ClientM [Entity User]
 createUser :: NewUserPayload -> ClientM (Entity User)
+getUser :: UserId -> ClientM (Entity User)
 
 allUsers :<|> getUser :<|> createUser = client (Proxy :: Proxy UserAPI)
 
@@ -53,6 +55,14 @@ businessLogicSpec config = around (withUserApp config) $ do
       result <- runClientM allUsers (clientEnv port)
       let (Right (entity:_)) = result
       entityVal entity `shouldBe` User { userUsername = "some name" }
+
+  describe "GET /users/:userId" $ do
+    it "should return a single user" $ \port -> do
+      newUser <- runClientM (createUser (NewUserPayload { newUsername = "some name" })) (clientEnv port)
+      let (Right newEntity) = newUser
+      result <- runClientM (getUser (entityKey newEntity)) (clientEnv port)
+      let (Right entity) = result
+      entityKey entity `shouldBe` entityKey newEntity
 
 spec :: Config -> Spec
 spec config = do
