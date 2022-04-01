@@ -6,13 +6,19 @@ module Main where
 
 import           Config                                (Config (..),
                                                         Environment (..),
-                                                        makePool, setLogger)
+                                                        setLogger)
+import           Control.Monad.IO.Class                (liftIO)
+import           DB                                    (Connection (..),
+                                                        connStrFromConnection,
+                                                        makePool)
+import           Migration                             (doRunMigration)
 import           Network.Wai.Handler.Warp              (run)
 import           Network.Wai.Middleware.Servant.Errors (errorMw)
 import           Safe                                  (readMay)
-import           Servant.API.ContentTypes               (JSON)
+import           Servant.API.ContentTypes              (JSON)
 import           System.Environment                    (lookupEnv)
 import           UsersRouter                           (app')
+
 
 lookupSetting :: Read a => String -> a -> IO a
 lookupSetting env def = do
@@ -40,4 +46,7 @@ main = do
   pool <- makePool env
   let config = Config { configPool = pool }
       logger = setLogger env
+      connection = Connection "sndr" "postgres" "postgres"
+      connStr = connStrFromConnection connection env
+  doRunMigration config env
   run port $ logger $ errorMw @JSON @'["error", "status"] $ app' config

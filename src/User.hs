@@ -18,10 +18,11 @@ module User where
 
 import           DB                  (uuidDef)
 import           Data.Aeson          (FromJSON, ToJSON)
-import           Database.Persist.TH
+import           Database.Persist.TH (mkMigrate, mkPersist, persistLowerCase,
+                                      setImplicitIdDef, share, sqlSettings)
 import           GHC.Generics        (Generic)
 
-share [mkPersist (setImplicitIdDef uuidDef sqlSettings)] [persistLowerCase|
+share [mkPersist (setImplicitIdDef uuidDef sqlSettings), mkMigrate "migrateAll"] [persistLowerCase|
   User json sql=users
     username   String
     deriving Show Eq

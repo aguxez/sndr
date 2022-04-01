@@ -27,6 +27,7 @@ library
   exposed-modules:
       Config
       DB
+      Migration
       User
       UsersRouter
   other-modules:
