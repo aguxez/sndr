@@ -4,19 +4,14 @@
 
 module UsersRouter (app', userProxy, UserAPI) where
 
-import qualified Data.ByteString.Lazy.Char8 as BSL
 import           Config                               (Config)
 import           Control.Monad.IO.Class               (MonadIO, liftIO)
 import           DB                                   (runDB)
-import           Data.UUID                            (UUID)
+import qualified Data.ByteString.Lazy.Char8           as BSL
 import           Database.Persist.Class.PersistEntity (Entity)
 import           Database.Persist.Class.PersistQuery  (selectList)
 import           Database.Persist.Class.PersistStore  (getEntity, insertEntity)
-import           Database.Persist.Sql                 (SqlPersistT)
-import           Network.Wai                          (Application)
 import           Servant
-import           Servant.Server                       (ServerError (..), err404)
-import           Servant.Server.Internal.Handler      (Handler)
 import           User                                 (NewUserPayload (..),
                                                        User (..), UserId)
 

@@ -2,13 +2,12 @@
 
 module Migration (doRunMigration, dropAndCreateDB) where
 
-import           Config                         (Config, Environment (..))
+import           Config                         (Config)
 import           Control.Monad.IO.Class         (MonadIO)
 import           DB                             (runDB, runDBNoTx)
-import           Database.Persist.Sql           (SqlBackend, SqlPersistT,
-                                                 rawExecute)
-import           Database.Persist.Sql.Migration (Migration, addMigration,
-                                                 runMigration, runSqlCommand)
+import           Database.Persist.Sql           (rawExecute)
+import           Database.Persist.Sql.Migration (Migration, runMigration,
+                                                 runSqlCommand)
 import           User                           (migrateAll)
 
 dropTestDB :: Migration

@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeApplications  #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module DB (runDB, testConnStr, uuidDef, makeTestPool, Connection (..), connStrFromConnection, makePool, runDBNoTx) where
 
@@ -36,8 +37,8 @@ data Connection = Connection {
   connectionDbPassword :: !String
 } deriving (Show)
 
-connStrFromConnection :: Connection -> Environment -> ConnectionString
-connStrFromConnection conn env = BS8.pack $ "dbname=sndr" <> suffix <> " user=postgres password=postgres"
+connStrFromConnection :: Environment -> ConnectionString
+connStrFromConnection env = BS8.pack $ "dbname=sndr" <> suffix <> " user=postgres password=postgres"
   where suffix = case env of
           Development -> "_dev"
           Test        -> "_test"
@@ -79,8 +80,7 @@ envPool Development = 5
 
 makePool :: Environment -> IO ConnectionPool
 makePool env = do
-  let connection = Connection "sndr" "postgres" "postgres"
-      connStr = connStrFromConnection connection env
+  let connStr = connStrFromConnection env
   case env of
     Test -> runNoLoggingT (createPostgresqlPool connStr (envPool Test))
     Development -> runStdoutLoggingT (createPostgresqlPool connStr (envPool Development))
