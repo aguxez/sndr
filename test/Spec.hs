@@ -10,8 +10,11 @@ import qualified Network.Wai.Handler.Warp             as Warp
 
 import           Config                               (Config (..),
                                                        Environment (..))
-import           DB                                   (makePool)
-import           Migration                            (doRunMigration)
+import           DB                                   (makePool, makeTestPool,
+                                                       runDBNoTx)
+import           Database.Persist.Sql.Migration       (runMigration)
+import           Migration                            (doRunMigration,
+                                                       dropAndCreateDB)
 import           Servant
 import           Servant.Client                       (BaseUrl (baseUrlPort),
                                                        ClientM, client,
@@ -57,7 +60,10 @@ spec config = do
 
 main :: IO ()
 main = do
+  testDbPool <- makeTestPool
+  let testConfig = Config { configPool = testDbPool }
+  dropAndCreateDB testConfig
   dbPool <- makePool Test
   let config = Config { configPool = dbPool }
-  doRunMigration config Test
+  doRunMigration config
   hspec $ spec config

@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeApplications  #-}
 
-module DB (runDB, uuidDef, Connection (..), connStrFromConnection, makePool, runDBNoTx) where
+module DB (runDB, testConnStr, uuidDef, makeTestPool, Connection (..), connStrFromConnection, makePool, runDBNoTx) where
 
 import           Config                                  (Config (..),
                                                           Environment (..))
@@ -18,11 +18,11 @@ import           Database.Persist.PersistValue           (LiteralType (Escaped),
 import           Database.Persist.Postgresql             (ConnectionString,
                                                           createPostgresqlPool)
 import           Database.Persist.Sql                    (ConnectionPool,
+                                                          IsolationLevel (..),
                                                           PersistField (..),
                                                           PersistFieldSql (..),
                                                           SqlPersistT,
                                                           SqlType (SqlOther),
-                                                          IsolationLevel (..),
                                                           runSqlPool,
                                                           runSqlPoolNoTransaction)
 import           Web.PathPieces                          (PathPiece (..),
@@ -42,8 +42,8 @@ connStrFromConnection conn env = BS8.pack $ "dbname=sndr" <> suffix <> " user=po
           Development -> "_dev"
           Test        -> "_test"
 
-connStr :: String -> ConnectionString
-connStr suffix = BS8.pack $ "dbname=sndr" <> suffix <> " user=postgres password=postgres"
+testConnStr :: ConnectionString
+testConnStr = BS8.pack "dbname=postgres user=postgres password=postgres"
 
 instance PersistField UUID.UUID where
   toPersistValue = PersistLiteral_ Escaped . BS8.pack . UUID.toString
@@ -84,3 +84,8 @@ makePool env = do
   case env of
     Test -> runNoLoggingT (createPostgresqlPool connStr (envPool Test))
     Development -> runStdoutLoggingT (createPostgresqlPool connStr (envPool Development))
+
+-- Creates a pool of a specific db on test so we can do actions without opening a database we'll be using.
+-- For example, dropping a database is not quite supported if the database is open.
+makeTestPool :: IO ConnectionPool
+makeTestPool = runNoLoggingT (createPostgresqlPool testConnStr (envPool Test ))

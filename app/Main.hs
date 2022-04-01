@@ -48,5 +48,5 @@ main = do
       logger = setLogger env
       connection = Connection "sndr" "postgres" "postgres"
       connStr = connStrFromConnection connection env
-  doRunMigration config env
+  doRunMigration config
   run port $ logger $ errorMw @JSON @'["error", "status"] $ app' config
