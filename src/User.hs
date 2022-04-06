@@ -25,6 +25,9 @@ import           GHC.Generics        (Generic)
 share [mkPersist (setImplicitIdDef uuidDef sqlSettings), mkMigrate "migrateAll"] [persistLowerCase|
   User json sql=users
     username   String
+
+    UniqueUsername username
+    
     deriving Show Eq
 |]
 

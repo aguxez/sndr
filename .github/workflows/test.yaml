@@ -33,4 +33,4 @@ jobs:
           enable-stack: true
           stack-version: '2.7.3'
       - name: Test
-        run: stack test
+        run: stack build --test --fast

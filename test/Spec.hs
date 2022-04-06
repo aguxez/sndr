@@ -46,19 +46,19 @@ businessLogicSpec config = around (withUserApp config) $ do
   -- tests
   describe "POST /users" $ do
     it "should create a user" $ \port -> do
-      result <- runClientM (createUser (NewUserPayload { newUsername = "some name" })) (clientEnv port)
+      result <- runClientM (createUser (NewUserPayload { newUsername = "name1" })) (clientEnv port)
       let (Right entity) = result
-      entityVal entity `shouldBe` User { userUsername = "some name" }
+      entityVal entity `shouldBe` User { userUsername = "name1" }
 
   describe "GET /users" $ do
     it "return all users" $ \port -> do
       result <- runClientM allUsers (clientEnv port)
       let (Right (entity:_)) = result
-      entityVal entity `shouldBe` User { userUsername = "some name" }
+      entityVal entity `shouldBe` User { userUsername = "name1" }
 
   describe "GET /users/:userId" $ do
     it "should return a single user" $ \port -> do
-      newUser <- runClientM (createUser (NewUserPayload { newUsername = "some name" })) (clientEnv port)
+      newUser <- runClientM (createUser (NewUserPayload { newUsername = "name2" })) (clientEnv port)
       let (Right newEntity) = newUser
       result <- runClientM (getUser (entityKey newEntity)) (clientEnv port)
       let (Right entity) = result
